@@ -28,9 +28,48 @@ os.makedirs(UPLOAD_DIR, exist_ok=True)
 os.makedirs(OUTPUT_DIR, exist_ok=True)
 
 
+def _allowed_origins():
+    raw = os.getenv('ALLOWED_ORIGINS', '*').strip()
+    if raw == '*':
+        return ['*']
+    return [item.strip() for item in raw.split(',') if item.strip()]
+
+
+ALLOWED_ORIGINS = _allowed_origins()
+
+
+@app.after_request
+def add_cors_headers(response):
+    origin = request.headers.get('Origin', '')
+    if ALLOWED_ORIGINS == ['*']:
+        response.headers['Access-Control-Allow-Origin'] = '*'
+    elif origin in ALLOWED_ORIGINS:
+        response.headers['Access-Control-Allow-Origin'] = origin
+        response.headers['Vary'] = 'Origin'
+
+    response.headers['Access-Control-Allow-Methods'] = 'GET,POST,OPTIONS'
+    response.headers['Access-Control-Allow-Headers'] = 'Content-Type,Authorization'
+    response.headers['Access-Control-Max-Age'] = '86400'
+    return response
+
+
+@app.route('/api/<path:_any>', methods=['OPTIONS'])
+def api_options(_any):
+    return ('', 204)
+
+
 @app.route('/')
 def index():
-    return render_template('index.html')
+    api_base_url = os.getenv('PUBLIC_API_BASE_URL', '').rstrip('/')
+    return render_template('index.html', api_base_url=api_base_url)
+
+
+@app.route('/api/health')
+def health():
+    return jsonify({
+        'status': 'ok',
+        'processing_available': PROCESSING_AVAILABLE
+    })
 
 
 @app.route('/api/upload', methods=['POST'])

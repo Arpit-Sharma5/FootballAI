@@ -1,4 +1,12 @@
 document.addEventListener('DOMContentLoaded', () => {
+    const API_BASE = (window.APP_CONFIG && window.APP_CONFIG.apiBaseUrl)
+        ? window.APP_CONFIG.apiBaseUrl.replace(/\/$/, '')
+        : '';
+
+    function apiUrl(path) {
+        return API_BASE ? `${API_BASE}${path}` : path;
+    }
+
     const uploadZone = document.getElementById('upload-zone');
     const fileInput = document.getElementById('file-input');
     const uploadPreview = document.getElementById('upload-preview');
@@ -117,7 +125,7 @@ document.addEventListener('DOMContentLoaded', () => {
         showSection(processingSection);
 
         try {
-            const res = await fetch('/api/upload', { method: 'POST', body: formData });
+            const res = await fetch(apiUrl('/api/upload'), { method: 'POST', body: formData });
             const data = await res.json();
 
             if (data.error) {
@@ -137,7 +145,7 @@ document.addEventListener('DOMContentLoaded', () => {
         sampleBtn.disabled = true;
 
         try {
-            const res = await fetch('/api/sample', { method: 'POST' });
+            const res = await fetch(apiUrl('/api/sample'), { method: 'POST' });
             const data = await res.json();
 
             if (data.error) {
@@ -158,7 +166,7 @@ document.addEventListener('DOMContentLoaded', () => {
         resetProgress();
         pollInterval = setInterval(async () => {
             try {
-                const res = await fetch(`/api/status/${currentTaskId}`);
+                const res = await fetch(apiUrl(`/api/status/${currentTaskId}`));
                 const data = await res.json();
 
                 updateProgress(data);
@@ -233,7 +241,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function showResults() {
         showSection(resultsSection);
-        resultVideo.src = `/api/video/${currentTaskId}`;
+        resultVideo.src = apiUrl(`/api/video/${currentTaskId}`);
         resultVideo.load();
         sampleBtn.disabled = false;
     }
@@ -246,7 +254,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     downloadBtn.addEventListener('click', () => {
         if (currentTaskId) {
-            window.location.href = `/api/download/${currentTaskId}`;
+            window.location.href = apiUrl(`/api/download/${currentTaskId}`);
         }
     });
 

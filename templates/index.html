@@ -332,6 +332,11 @@
         </div>
     </footer>
 
+    <script>
+        window.APP_CONFIG = {
+            apiBaseUrl: "{{ api_base_url }}"
+        };
+    </script>
     <script src="{{ url_for('static', filename='js/app.js') }}"></script>
 </body>
 
