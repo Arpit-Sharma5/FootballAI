@@ -88,3 +88,5 @@ htmlcov/
 # Type checker / test runner caches
 .tox/
 .nox/
+.vercel
+.env*.local
