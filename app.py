@@ -17,8 +17,13 @@ app = Flask(__name__)
 app.config['MAX_CONTENT_LENGTH'] = 200 * 1024 * 1024
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-UPLOAD_DIR = os.path.join(BASE_DIR, 'uploads')
-OUTPUT_DIR = os.path.join(BASE_DIR, 'processed')
+if os.getenv('VERCEL'):
+    # Vercel functions can only write to /tmp during invocation.
+    UPLOAD_DIR = '/tmp/uploads'
+    OUTPUT_DIR = '/tmp/processed'
+else:
+    UPLOAD_DIR = os.path.join(BASE_DIR, 'uploads')
+    OUTPUT_DIR = os.path.join(BASE_DIR, 'processed')
 os.makedirs(UPLOAD_DIR, exist_ok=True)
 os.makedirs(OUTPUT_DIR, exist_ok=True)
 
