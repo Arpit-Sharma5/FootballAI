@@ -31,45 +31,6 @@ This project takes a raw football match video as input and produces a fully anno
 ## 📁 Project Structure
 
 ```
-
-## 🚀 Run Locally (Full Pipeline)
-
-Install the full ML/CV stack and run Flask locally:
-
-```bash
-python -m pip install -r requirements-local.txt
-python app.py
-```
-
-Open: `http://localhost:8000`
-
-## ☁️ Deploy Backend on Render
-
-This repo includes `render.yaml` and `Procfile` for Render deployment.
-
-1. Push this repository to GitHub.
-2. In Render, create a new Web Service from this repository.
-3. Render auto-detects `render.yaml` and uses:
-	- Build command: `pip install -r requirements-local.txt`
-	- Start command: `gunicorn app:app --bind 0.0.0.0:$PORT --workers 1 --threads 8 --timeout 1200`
-4. Set environment variables in Render:
-	- `ALLOWED_ORIGINS=https://footballai-nu.vercel.app`
-	- `PUBLIC_API_BASE_URL=` (leave empty on backend service)
-5. Deploy and copy your Render service URL, e.g. `https://footballai-backend.onrender.com`.
-
-Health check endpoint:
-
-`GET /api/health`
-
-## 🌐 Connect Vercel Frontend to Render Backend
-
-In your Vercel project, set:
-
-- `PUBLIC_API_BASE_URL=https://<your-render-service>.onrender.com`
-
-Then redeploy Vercel.
-
-The frontend will send `/api/*` requests to Render while still serving UI from Vercel.
 football_analysis-main/
 ├── main.py                         # Terminal-based pipeline
 ├── app.py                          # Flask web app
