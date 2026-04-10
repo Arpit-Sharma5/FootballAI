@@ -1,0 +1,71 @@
+# Virtual environments
+venv/
+env/
+.venv/
+.env/
+
+# Python cache
+__pycache__/
+*.py[cod]
+*$py.class
+*.pyo
+
+# Distribution / packaging
+dist/
+build/
+*.egg-info/
+*.egg
+
+# IDE / Editor
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Model files (too large for GitHub)
+models/*.pt
+models/*.pth
+models/*.onnx
+models/*.engine
+
+# Video files (too large for GitHub)
+input_videos/*.mp4
+input_videos/*.avi
+input_videos/*.mov
+input_videos/*.mkv
+output_videos/*.mp4
+output_videos/*.avi
+output_videos/*.mov
+output_videos/*.jpg
+output_videos/*.png
+
+# Uploaded and processed files
+uploads/
+processed/
+
+# Stub files (cached inference data)
+stubs/*.pkl
+
+# Jupyter Notebook checkpoints
+.ipynb_checkpoints/
+
+# Environment variables
+.env
+.env.local
+.env.production
+
+# Logs
+*.log
+
+# pytest
+.pytest_cache/
+
+# Coverage
+htmlcov/
+.coverage
