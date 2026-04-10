@@ -1,7 +1,17 @@
 from flask import Flask, request, jsonify, send_file, render_template
 import os
 import uuid
-from processing import start_processing, tasks
+
+try:
+    from processing import start_processing, tasks
+    PROCESSING_AVAILABLE = True
+except Exception:
+    # Vercel/serverless runtime cannot host full CV/ML pipeline dependencies.
+    PROCESSING_AVAILABLE = False
+    tasks = {}
+
+    def start_processing(*args, **kwargs):
+        raise RuntimeError('Processing pipeline is unavailable in this deployment.')
 
 app = Flask(__name__)
 app.config['MAX_CONTENT_LENGTH'] = 200 * 1024 * 1024
@@ -20,6 +30,9 @@ def index():
 
 @app.route('/api/upload', methods=['POST'])
 def upload():
+    if not PROCESSING_AVAILABLE:
+        return jsonify({'error': 'Video processing is disabled on this deployment.'}), 503
+
     if 'video' not in request.files:
         return jsonify({'error': 'No video file provided'}), 400
 
@@ -44,6 +57,9 @@ def upload():
 
 @app.route('/api/sample', methods=['POST'])
 def process_sample():
+    if not PROCESSING_AVAILABLE:
+        return jsonify({'error': 'Sample processing is disabled on this deployment.'}), 503
+
     sample_path = os.path.join(BASE_DIR, 'input_videos', '08fd33_4.mp4')
     if not os.path.exists(sample_path):
         return jsonify({'error': 'Sample video not found'}), 404
